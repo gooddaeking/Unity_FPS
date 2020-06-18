@@ -34,6 +34,8 @@ public class PlayerFire : MonoBehaviour
             {
                 print("충돌오브젝트 : " + hitInfo.collider.name);
 
+                
+
                 //충돌 지점에 총알 이펙트 생성한다.
                 //총알 파편 이펙트 생성
                 GameObject bulletImpact = Instantiate(bulletImpactPrefab);
@@ -41,6 +43,12 @@ public class PlayerFire : MonoBehaviour
                 //파편이펙트
                 //파편이 부딪힌 지점이 향하는 방향으로 튀게 해줘야 한다.
                 bulletImpact.transform.forward = hitInfo.normal;
+
+                //내총알에 충돌했으니 몬스터 체력을 깎기
+                EnemyFSM enemy = hitInfo.collider.GetComponent<EnemyFSM>();
+                enemy.hitDamage(10);
+                //hitInfo.collider.gameObject.GetComponent<EnemyFSM>().hitDamage(10);
+                //hitInfo.transform.GetComponent<EnemyFSM>().hitDamage(10);
             }
 
             //레이어 마스크 사용 충돌처리(최적화)
