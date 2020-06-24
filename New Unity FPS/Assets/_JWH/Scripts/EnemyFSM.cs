@@ -18,6 +18,10 @@ public class EnemyFSM : MonoBehaviour
     //public GameObject player;
     Transform player;               // 플레이어를 찾기위해
     CharacterController enemy;      // 몬스터 이동을 위해
+
+    //애니메이션을 위해 
+    Animator anim;
+
     int hp = 100;
     int att = 5;
     public float moveSpeed = 10.0f;
@@ -60,6 +64,8 @@ public class EnemyFSM : MonoBehaviour
         enemy = GetComponent<CharacterController>();
         startPoint = transform.position;
         player = GameObject.Find("Player").transform;
+        //애니메이터 컴포넌트
+        anim = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -128,6 +134,8 @@ public class EnemyFSM : MonoBehaviour
         {
             state = EnemyState.Move;
             Debug.Log("플레이어를 발견! 쫓아가겠다!!");
+            //애니메이션
+            anim.SetTrigger("Move");
         }
         //1. 플레이어와 일정범위가 되면 이동상태로 변경 (탐지 범위)
         //- 플레이어 찾기 (GameObject.Find("Player"))
@@ -142,6 +150,7 @@ public class EnemyFSM : MonoBehaviour
         {
             state = EnemyState.Return;
             Debug.Log("너무 멀리왔다, 돌아간다!!");
+            anim.SetTrigger("Return");
         }
         else if (Vector3.Distance(transform.position, player.position) > attackRange)
         {
@@ -159,8 +168,9 @@ public class EnemyFSM : MonoBehaviour
         }
         else
         {
-                state = EnemyState.Attack;
-                Debug.Log("플레이어 공격!!");
+            state = EnemyState.Attack;
+            Debug.Log("플레이어 공격!!");
+            anim.SetTrigger("Attack");
         }
         
         //1. 플레이어를 향해 이동 후 공격범위 안에 들어오면 공격상태로 변경
@@ -183,6 +193,7 @@ public class EnemyFSM : MonoBehaviour
                 //플레이어의 필요한 스크립트 컴포넌트를 가져와서 처리한다
                 //player.GetComponent<PlayerMove>().hitDamage(power);
                 timer = 0f;
+                anim.SetTrigger("Attack");
             }
         }
         else
@@ -190,6 +201,7 @@ public class EnemyFSM : MonoBehaviour
             state = EnemyState.Move;
             Debug.Log("플레이어를 쫓아가겠다!!");
             timer = 0f;
+            anim.SetTrigger("Attack");
         }
         
             //1. 플레이어가 공격범위 안에 들어오면 일정한 시간간격으로 플레이어 공격
@@ -219,6 +231,7 @@ public class EnemyFSM : MonoBehaviour
             transform.position = startPoint;
             state = EnemyState.Idle;
             Debug.Log("돌아왔다. 대기한다!!");
+            anim.SetTrigger("Idle");
         }
     }
 
@@ -238,6 +251,7 @@ public class EnemyFSM : MonoBehaviour
             state = EnemyState.Hit;
             Debug.Log("으악!!");
             Debug.Log("HP : " + hp);
+            anim.SetTrigger("Hit");
             Hit();
         }
         //0이하이면 죽음상태
@@ -245,6 +259,7 @@ public class EnemyFSM : MonoBehaviour
         {
             state = EnemyState.Die;
             Debug.Log("내.. 내가.. 죽다니..");
+            anim.SetTrigger("Die");
             Die();
         }
     }
