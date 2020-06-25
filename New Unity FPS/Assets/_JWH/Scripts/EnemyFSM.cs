@@ -223,6 +223,7 @@ public class EnemyFSM : MonoBehaviour
         if(Vector3.Distance(transform.position, startPoint) > 0.1f)
         {
             Vector3 dir = (startPoint - transform.position).normalized;
+            anim.SetTrigger("Move");
             enemy.SimpleMove(dir * moveSpeed);
         }
         else
@@ -282,7 +283,9 @@ public class EnemyFSM : MonoBehaviour
         //피격모션 시간만큼 기다리기
         yield return new WaitForSeconds(1.0f);
         //현재 상태를 이동으로 변경
+        anim.SetTrigger("Move");
         state = EnemyState.Move;
+        
         Debug.Log("이.. 이동한다!");
     }
 
